@@ -5,228 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TPA D1 Availability Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1F4E78 0%, #2E5C8A 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-        
-        .subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        .controls {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .controls label {
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .controls input, .controls select {
-            padding: 8px 12px;
-            border: 1px solid #D0D0D0;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        
-        .controls button {
-            padding: 8px 16px;
-            background: #1F4E78;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .controls button:hover {
-            background: #163857;
-        }
-        
-        .dashboard {
-            background: white;
-            border-radius: 8px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        
-        .dashboard h2 {
-            font-size: 18px;
-            color: #1F4E78;
-            margin-bottom: 20px;
-        }
-        
-        .availability-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        
-        .availability-table th, .availability-table td {
-            padding: 12px 8px;
-            text-align: left;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .availability-table th {
-            background: #F5F5F5;
-            font-weight: 600;
-            color: #333;
-            position: sticky;
-            top: 0;
-        }
-        
-        .date-col {
-            font-weight: 600;
-            color: #1F4E78;
-            min-width: 120px;
-        }
-        
-        .time-col {
-            background: #F9F9F9;
-            font-weight: 500;
-            color: #666;
-            min-width: 100px;
-        }
-        
-        .availability-cell {
-            padding: 12px 8px;
-            border: 1px solid #E0E0E0;
-            min-width: 200px;
-        }
-        
-        .availability-cell.empty {
-            background: #FAFAFA;
-            color: #999;
-            font-style: italic;
-        }
-        
-        .availability-cell.has-teams {
-            background: #E8F5E9;
-        }
-        
-        .team-badge {
-            display: inline-block;
-            background: #1F4E78;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: 2px 4px 2px 0;
-            font-size: 12px;
-            white-space: nowrap;
-        }
-        
-        .team-count {
-            display: inline-block;
-            background: #D4E7F7;
-            color: #1F4E78;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
-            font-size: 11px;
-            margin-left: 6px;
-        }
-        
-        .legend {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid #E0E0E0;
-            font-size: 13px;
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .legend-box {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .loading {
-            text-align: center;
-            color: #999;
-            padding: 40px;
-            font-size: 14px;
-        }
-        
-        .error {
-            background: #FFEBEE;
-            color: #C62828;
-            padding: 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #EF9A9A;
-        }
-        
-        .refresh-info {
-            font-size: 12px;
-            color: #999;
-            margin-top: 16px;
-            text-align: right;
-        }
-        
-        @media (max-width: 768px) {
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .controls input, .controls select, .controls button {
-                width: 100%;
-            }
-            
-            .availability-table {
-                font-size: 11px;
-            }
-            
-            .availability-table th, .availability-table td {
-                padding: 8px 4px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1F4E78 0%, #2E5C8A 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; color: white; margin-bottom: 30px; }
+        h1 { font-size: 28px; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; opacity: 0.9; }
+        .controls { background: white; border-radius: 8px; padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .controls label { font-weight: 500; color: #333; }
+        .controls input { padding: 8px 12px; border: 1px solid #D0D0D0; border-radius: 6px; font-size: 14px; flex: 1; min-width: 300px; }
+        .controls button { padding: 8px 16px; background: #1F4E78; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; }
+        .controls button:hover { background: #163857; }
+        .dashboard { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto; margin-bottom: 24px; }
+        .dashboard h2 { font-size: 18px; color: #1F4E78; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 12px 8px; text-align: left; border: 1px solid #E0E0E0; }
+        th { background: #F5F5F5; font-weight: 600; color: #333; }
+        .date-cell { font-weight: 600; color: #1F4E78; min-width: 120px; }
+        .team-badge { display: inline-block; background: #1F4E78; color: white; padding: 4px 8px; border-radius: 4px; margin: 2px 4px 2px 0; font-size: 12px; white-space: nowrap; }
+        .team-count { display: inline-block; background: #D4E7F7; color: #1F4E78; padding: 2px 6px; border-radius: 3px; font-weight: 600; font-size: 11px; margin-left: 6px; }
+        .has-teams { background: #E8F5E9; }
+        .empty { background: #FAFAFA; color: #999; font-style: italic; }
+        .loading { text-align: center; color: #999; padding: 40px; }
+        .error { background: #FFEBEE; color: #C62828; padding: 16px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #EF9A9A; }
+        .legend { margin-top: 24px; padding-top: 16px; border-top: 1px solid #E0E0E0; font-size: 13px; display: flex; gap: 24px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-box { width: 20px; height: 20px; border-radius: 4px; border: 1px solid #E0E0E0; }
     </style>
 </head>
 <body>
@@ -237,8 +41,8 @@
         </header>
         
         <div class="controls">
-            <label for="sheetUrl">Google Sheet URL:</label>
-            <input type="text" id="sheetUrl" placeholder="Paste your Google Sheet URL" style="flex: 1; min-width: 300px;">
+            <label>Google Sheet URL:</label>
+            <input type="text" id="sheetUrl" placeholder="Paste your Google Sheet URL">
             <button onclick="loadData()">Load Dashboard</button>
             <button onclick="refreshData()" style="background: #666;">Refresh</button>
         </div>
@@ -248,20 +52,8 @@
         <div class="dashboard">
             <h2>Team Availability by Date & Time</h2>
             <div id="dashboardContent" class="loading">
-                Enter your Google Sheet URL above and click "Load Dashboard" to see team availability
+                Enter your Google Sheet URL above and click "Load Dashboard"
             </div>
-            <div class="refresh-info" id="refreshInfo"></div>
-        </div>
-        
-        <div class="dashboard" style="margin-top: 24px;">
-            <h2>How to use</h2>
-            <p style="color: #666; line-height: 1.6;">
-                1. Go to your Google Sheet (the one where teams submit their availability)<br>
-                2. Share it publicly (right-click sheet → Share → Change to "Anyone with the link")<br>
-                3. Copy the sheet URL and paste it above<br>
-                4. Click "Load Dashboard" to see all team availability visualized by date and time<br>
-                5. Click "Refresh" to update with latest submissions
-            </p>
         </div>
     </div>
 
@@ -271,13 +63,12 @@
             return match ? match[1] : null;
         }
         
-        function getCsvUrl(sheetId, sheetName = 'Availability Summary') {
-            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+        function getCsvUrl(sheetId, sheetName = 'Raw%20Submissions') {
+            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
         }
         
         async function loadData() {
             const url = document.getElementById('sheetUrl').value.trim();
-            
             if (!url) {
                 showError('Please enter a Google Sheet URL');
                 return;
@@ -285,7 +76,7 @@
             
             const sheetId = getSheetIdFromUrl(url);
             if (!sheetId) {
-                showError('Invalid Google Sheet URL. Make sure to use a link like: https://docs.google.com/spreadsheets/d/...');
+                showError('Invalid URL format');
                 return;
             }
             
@@ -294,29 +85,29 @@
         
         async function fetchAndDisplay(sheetId) {
             try {
-                document.getElementById('dashboardContent').innerHTML = '<div class="loading">Loading data...</div>';
+                document.getElementById('dashboardContent').innerHTML = '<div class="loading">Loading...</div>';
                 clearError();
                 
-                const csvUrl = getCsvUrl(sheetId, 'Availability%20Summary');
-                
+                const csvUrl = getCsvUrl(sheetId, 'Raw%20Submissions');
                 const response = await fetch(csvUrl);
+                
                 if (!response.ok) {
-                    throw new Error('Unable to fetch sheet. Make sure it\'s shared publicly (Anyone with link)');
+                    throw new Error('Sheet not found or not shared publicly');
                 }
                 
                 const csv = await response.text();
                 const data = parseCSV(csv);
                 
                 if (!data || data.length === 0) {
-                    document.getElementById('dashboardContent').innerHTML = '<div class="loading">No availability data found. Teams may not have submitted yet.</div>';
+                    document.getElementById('dashboardContent').innerHTML = '<div class="loading">No data found in Raw Submissions sheet</div>';
                     return;
                 }
                 
-                displayDashboard(data);
-                document.getElementById('refreshInfo').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+                const aggregated = aggregateData(data);
+                displayDashboard(aggregated);
+                
             } catch (error) {
-                showError(`Error loading data: ${error.message}`);
-                document.getElementById('dashboardContent').innerHTML = '<div class="loading">Error loading dashboard</div>';
+                showError('Error: ' + error.message);
             }
         }
         
@@ -324,81 +115,85 @@
             const lines = csv.trim().split('\n');
             if (lines.length < 2) return [];
             
+            // Parse header
             const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
             const data = [];
             
+            // Parse rows
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                const parts = lines[i].split(',');
                 const row = {};
+                
                 headers.forEach((header, idx) => {
-                    row[header] = values[idx] || '';
+                    row[header] = (parts[idx] || '').trim().replace(/"/g, '');
                 });
-                if (row.Date) data.push(row);
+                
+                // Only add if has required fields
+                if (row.Date && row['Time Slot'] && row['Team Name']) {
+                    data.push(row);
+                }
             }
             
             return data;
         }
         
-        function displayDashboard(data) {
-            // Group data by date, then by time slot
+        function aggregateData(rawData) {
             const grouped = {};
             
-            data.forEach(row => {
-                const date = row.Date || '';
-                const timeSlot = row['Time Slot'] || '';
-                const teams = (row['Available Teams'] || '').split(',').map(t => t.trim()).filter(t => t);
-                const count = parseInt(row.Count || 0);
+            rawData.forEach(row => {
+                const date = row.Date.trim();
+                const time = row['Time Slot'].trim();
+                const team = row['Team Name'].trim();
                 
-                if (!grouped[date]) {
-                    grouped[date] = {};
+                const key = `${date}|${time}`;
+                if (!grouped[key]) {
+                    grouped[key] = { date, time, teams: new Set() };
                 }
-                grouped[date][timeSlot] = { teams, count };
+                grouped[key].teams.add(team);
             });
             
-            // Sort dates
-            const sortedDates = Object.keys(grouped).sort();
-            const timeSlots = ['Morning', 'Afternoon', 'Evening', 'Flexible (Anytime)'];
-            
-            // Build table
-            let html = '<table class="availability-table"><thead><tr><th class="date-col">Date</th>';
-            timeSlots.forEach(slot => {
-                html += `<th>${slot}</th>`;
+            return Object.values(grouped).map(item => ({
+                date: item.date,
+                time: item.time,
+                teams: Array.from(item.teams),
+                count: item.teams.size
+            }));
+        }
+        
+        function displayDashboard(data) {
+            // Group by date
+            const byDate = {};
+            data.forEach(item => {
+                if (!byDate[item.date]) byDate[item.date] = {};
+                byDate[item.date][item.time] = item;
             });
+            
+            const dates = Object.keys(byDate).sort();
+            const times = ['Morning', 'Afternoon', 'Evening', 'Flexible (Anytime)'];
+            
+            let html = '<table><thead><tr><th class="date-cell">Date</th>';
+            times.forEach(t => html += `<th>${t}</th>`);
             html += '</tr></thead><tbody>';
             
-            sortedDates.forEach(date => {
-                html += `<tr><td class="date-col">${date}</td>`;
-                
-                timeSlots.forEach(slot => {
-                    const availability = grouped[date][slot];
-                    
-                    if (availability && availability.teams.length > 0) {
-                        let teamsHtml = availability.teams.map(team => 
-                            `<span class="team-badge">${team}</span>`
-                        ).join('');
-                        html += `<td class="availability-cell has-teams">${teamsHtml}<span class="team-count">${availability.count}</span></td>`;
+            dates.forEach(date => {
+                html += `<tr><td class="date-cell">${date}</td>`;
+                times.forEach(time => {
+                    const item = byDate[date][time];
+                    if (item && item.teams.length > 0) {
+                        const badges = item.teams.map(t => `<span class="team-badge">${t}</span>`).join('');
+                        html += `<td class="has-teams">${badges}<span class="team-count">${item.count}</span></td>`;
                     } else {
-                        html += `<td class="availability-cell empty">—</td>`;
+                        html += '<td class="empty">—</td>';
                     }
                 });
-                
                 html += '</tr>';
             });
             
             html += '</tbody></table>';
-            
-            html += `
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #E8F5E9; border-color: #A5D6A7;"></div>
-                        <span>Teams available</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-box" style="background: #FAFAFA;"></div>
-                        <span>No teams available</span>
-                    </div>
-                </div>
-            `;
+            html += `<div class="legend">
+                <div class="legend-item"><div class="legend-box" style="background: #E8F5E9;"></div> Teams available</div>
+                <div class="legend-item"><div class="legend-box" style="background: #FAFAFA;"></div> None available</div>
+            </div>`;
             
             document.getElementById('dashboardContent').innerHTML = html;
         }
@@ -406,28 +201,18 @@
         function refreshData() {
             const url = document.getElementById('sheetUrl').value.trim();
             const sheetId = getSheetIdFromUrl(url);
-            if (sheetId) {
-                fetchAndDisplay(sheetId);
-            }
+            if (sheetId) fetchAndDisplay(sheetId);
         }
         
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
+        function showError(msg) {
+            const el = document.getElementById('error');
+            el.textContent = msg;
+            el.style.display = 'block';
         }
         
         function clearError() {
             document.getElementById('error').style.display = 'none';
         }
-        
-        // Optional: Auto-refresh every 30 seconds if sheet is loaded
-        setInterval(() => {
-            const url = document.getElementById('sheetUrl').value.trim();
-            if (url && document.getElementById('dashboardContent').textContent.includes('Morning')) {
-                refreshData();
-            }
-        }, 30000);
     </script>
 </body>
 </html>
