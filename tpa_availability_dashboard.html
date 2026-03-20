@@ -252,8 +252,8 @@
                             html += `<div class="team-item ${timeClass}">${item['Team Name']}<br><small>${timeSlot}</small></div>`;
                         } else {
                             // Match booking - display team1 vs team2
-                            const team1 = item['team1'] || 'TBD';
-                            const team2 = item['team2'] || 'TBD';
+                            const team1 = item['Team1'] || 'TBD';
+                            const team2 = item['Team2'] || 'TBD';
                             const time = item['time'] || '';
                             html += `<div class="match-item">${team1}<br>vs<br>${team2}<br><small>${time}</small></div>`;
                         }
