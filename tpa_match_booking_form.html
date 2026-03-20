@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPA D1 Match Booking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1F4E78 0%, #2E5C8A 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        header { text-align: center; color: white; margin-bottom: 30px; }
+        h1 { font-size: 28px; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; opacity: 0.9; }
+        .form-card { background: white; border-radius: 8px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .form-card h2 { font-size: 18px; color: #1F4E78; margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #D0D0D0; border-radius: 6px; font-size: 14px; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #1F4E78; box-shadow: 0 0 0 2px rgba(31, 78, 120, 0.1); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        button { width: 100%; padding: 12px; background: #1F4E78; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 16px; }
+        button:hover { background: #163857; }
+        button:active { transform: scale(0.98); }
+        .message { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; }
+        .success { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+        .error { background: #FFEBEE; color: #C62828; border: 1px solid #EF9A9A; }
+        .info { background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
+        .instructions { background: #F5F5F5; padding: 16px; border-radius: 6px; margin-bottom: 24px; font-size: 13px; color: #666; line-height: 1.6; }
+        .instructions strong { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TPA D1 League — Book a Match</h1>
+            <p class="subtitle">Schedule a confirmed match between two teams</p>
+        </header>
+        
+        <div class="form-card">
+            <div class="instructions">
+                <strong>How it works:</strong> Use this form to book a confirmed match. Once submitted, the match appears on the Confirmed Matches calendar. Make sure both teams have agreed on the date, time, and location first.
+            </div>
+            
+            <div id="message"></div>
+            
+            <form id="matchForm" onsubmit="submitMatch(event)">
+                <h2>Match Details</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="team1">Team 1 *</label>
+                        <select id="team1" required>
+                            <option value="">Select team...</option>
+                            <option>Iamla-or / Kaewsuto</option>
+                            <option>Mocciola / Rawal</option>
+                            <option>Praditpetchara / Kitsomsub</option>
+                            <option>Rawal / Rotrakarn</option>
+                            <option>Asawachatroj / Rungsaeng</option>
+                            <option>Na Nakhon / Thumpothong</option>
+                            <option>Swangchot / Hug</option>
+                            <option>Udomsuk / Khundanpinitwong</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team2">Team 2 *</label>
+                        <select id="team2" required>
+                            <option value="">Select team...</option>
+                            <option>Iamla-or / Kaewsuto</option>
+                            <option>Mocciola / Rawal</option>
+                            <option>Praditpetchara / Kitsomsub</option>
+                            <option>Rawal / Rotrakarn</option>
+                            <option>Asawachatroj / Rungsaeng</option>
+                            <option>Na Nakhon / Thumpothong</option>
+                            <option>Swangchot / Hug</option>
+                            <option>Udomsuk / Khundanpinitwong</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Date (YYYY-MM-DD) *</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time">Time *</label>
+                        <select id="time" required>
+                            <option value="">Select time...</option>
+                            <option>Morning (09:00 - 12:00)</option>
+                            <option>Afternoon (12:00 - 16:00)</option>
+                            <option>Evening (16:00 - 20:00)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="court">Court / Location *</label>
+                    <input type="text" id="court" placeholder="e.g., Bangkok Club, Home Court" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">Contact Person Email *</label>
+                    <input type="email" id="contact" placeholder="Your email address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes (optional)</label>
+                    <textarea id="notes" rows="3" placeholder="Any additional details..."></textarea>
+                </div>
+                
+                <button type="submit">Book Match</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            msg.style.display = 'block';
+        }
+        
+        function clearMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+        
+        async function submitMatch(event) {
+            event.preventDefault();
+            
+            const team1 = document.getElementById('team1').value;
+            const team2 = document.getElementById('team2').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const court = document.getElementById('court').value;
+            const contact = document.getElementById('contact').value;
+            const notes = document.getElementById('notes').value;
+            
+            // Validation
+            if (team1 === team2) {
+                showMessage('Error: Team 1 and Team 2 must be different', 'error');
+                return;
+            }
+            
+            // Convert date format
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toISOString().split('T')[0];
+            
+            const payload = {
+                team1,
+                team2,
+                date: formattedDate,
+                time,
+                court,
+                contact,
+                notes,
+                submittedAt: new Date().toISOString()
+            };
+            
+            try {
+                showMessage('Booking match...', 'info');
+                
+                // Send to Google Apps Script
+                const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('✓ Match booked successfully! It will appear on the Confirmed Matches calendar.', 'success');
+                    document.getElementById('matchForm').reset();
+                    setTimeout(() => clearMessage(), 5000);
+                } else {
+                    throw new Error(data.error || 'Booking failed');
+                }
+            } catch (error) {
+                showMessage(`Error: ${error.message}. Please try again or contact admin.`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
