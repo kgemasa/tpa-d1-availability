@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TPA D1 Availability Calendar</title>
+    <title>TPA D1 Availability & Matches</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1F4E78 0%, #2E5C8A 100%); min-height: 100vh; padding: 20px; }
@@ -16,7 +16,11 @@
         .controls input { padding: 8px 12px; border: 1px solid #D0D0D0; border-radius: 6px; font-size: 14px; flex: 1; min-width: 300px; }
         .controls button { padding: 8px 16px; background: #1F4E78; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; }
         .controls button:hover { background: #163857; }
-        .calendar-container { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .tabs { background: white; border-radius: 8px 8px 0 0; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; border-bottom: 2px solid #E0E0E0; }
+        .tab-button { padding: 16px 24px; background: transparent; border: none; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+        .tab-button.active { color: #1F4E78; border-bottom-color: #1F4E78; }
+        .tab-button:hover { color: #1F4E78; }
+        .calendar-container { background: white; border-radius: 0 0 8px 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .calendar-header h2 { font-size: 20px; color: #1F4E78; }
         .month-nav button { padding: 8px 12px; margin-left: 8px; background: #1F4E78; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
@@ -33,6 +37,9 @@
         .team-item.afternoon { background: #FF8C42; }
         .team-item.evening { background: #2E7D32; }
         .team-item.flexible { background: #C9A84C; }
+        .match-item { background: #1F4E78; color: white; padding: 6px 8px; border-radius: 4px; margin-bottom: 4px; font-size: 12px; line-height: 1.3; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .error { background: #FFEBEE; color: #C62828; padding: 16px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #EF9A9A; }
         .loading { text-align: center; color: #999; padding: 40px; }
         .legend { margin-top: 24px; padding-top: 16px; border-top: 1px solid #E0E0E0; font-size: 13px; display: flex; gap: 24px; flex-wrap: wrap; }
@@ -43,62 +50,105 @@
 <body>
     <div class="container">
         <header>
-            <h1>TPA D1 League — Availability Calendar</h1>
-            <p class="subtitle">See which teams are available on each day</p>
+            <h1>TPA D1 League — Availability & Matches</h1>
+            <p class="subtitle">See availability and confirmed match schedule</p>
         </header>
         
         <div class="controls">
             <label>Google Sheet URL:</label>
             <input type="text" id="sheetUrl" placeholder="Paste your Google Sheet URL">
-            <button onclick="loadData()">Load Calendar</button>
+            <button onclick="loadData()">Load</button>
             <button onclick="refreshData()" style="background: #666;">Refresh</button>
         </div>
         
         <div id="error" class="error" style="display: none;"></div>
         
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('availability')">📅 Availability</button>
+            <button class="tab-button" onclick="switchTab('matches')">🏓 Confirmed Matches</button>
+        </div>
+        
         <div class="calendar-container">
-            <div class="calendar-header">
-                <h2 id="monthTitle">March 2026</h2>
-                <div class="month-nav">
-                    <button onclick="prevMonth()">← Previous</button>
-                    <button onclick="nextMonth()">Next →</button>
+            <!-- AVAILABILITY TAB -->
+            <div id="availability" class="tab-content active">
+                <div class="calendar-header">
+                    <h2 id="monthTitle1">March 2026</h2>
+                    <div class="month-nav">
+                        <button onclick="prevMonth('availability')">← Previous</button>
+                        <button onclick="nextMonth('availability')">Next →</button>
+                    </div>
+                </div>
+                
+                <div class="weekdays">
+                    <div class="weekday-header">Sun</div>
+                    <div class="weekday-header">Mon</div>
+                    <div class="weekday-header">Tue</div>
+                    <div class="weekday-header">Wed</div>
+                    <div class="weekday-header">Thu</div>
+                    <div class="weekday-header">Fri</div>
+                    <div class="weekday-header">Sat</div>
+                </div>
+                
+                <div id="calendarGrid1" class="calendar-grid loading">
+                    Enter your Google Sheet URL above and click "Load"
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-box" style="background: #7B68EE;"></div> Morning</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #FF8C42;"></div> Afternoon</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #2E7D32;"></div> Evening</div>
+                    <div class="legend-item"><div class="legend-box" style="background: #C9A84C;"></div> Flexible</div>
                 </div>
             </div>
             
-            <div class="weekdays">
-                <div class="weekday-header">Sun</div>
-                <div class="weekday-header">Mon</div>
-                <div class="weekday-header">Tue</div>
-                <div class="weekday-header">Wed</div>
-                <div class="weekday-header">Thu</div>
-                <div class="weekday-header">Fri</div>
-                <div class="weekday-header">Sat</div>
-            </div>
-            
-            <div id="calendarGrid" class="calendar-grid loading">
-                Enter your Google Sheet URL above and click "Load Calendar"
-            </div>
-            
-            <div class="legend">
-                <div class="legend-item"><div class="legend-box" style="background: #7B68EE;"></div> Morning (9am-12pm)</div>
-                <div class="legend-item"><div class="legend-box" style="background: #FF8C42;"></div> Afternoon (12pm-4pm)</div>
-                <div class="legend-item"><div class="legend-box" style="background: #2E7D32;"></div> Evening (4pm-8pm)</div>
-                <div class="legend-item"><div class="legend-box" style="background: #C9A84C;"></div> Flexible (Anytime)</div>
+            <!-- MATCHES TAB -->
+            <div id="matches" class="tab-content">
+                <div class="calendar-header">
+                    <h2 id="monthTitle2">March 2026</h2>
+                    <div class="month-nav">
+                        <button onclick="prevMonth('matches')">← Previous</button>
+                        <button onclick="nextMonth('matches')">Next →</button>
+                    </div>
+                </div>
+                
+                <div class="weekdays">
+                    <div class="weekday-header">Sun</div>
+                    <div class="weekday-header">Mon</div>
+                    <div class="weekday-header">Tue</div>
+                    <div class="weekday-header">Wed</div>
+                    <div class="weekday-header">Thu</div>
+                    <div class="weekday-header">Fri</div>
+                    <div class="weekday-header">Sat</div>
+                </div>
+                
+                <div id="calendarGrid2" class="calendar-grid loading">
+                    Enter your Google Sheet URL above and click "Load"
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentDate = new Date(2026, 2, 1); // March 2026
+        let currentDate1 = new Date(2026, 2, 1);
+        let currentDate2 = new Date(2026, 2, 1);
         let availabilityData = [];
+        let matchesData = [];
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
         
         function getSheetIdFromUrl(url) {
             const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
             return match ? match[1] : null;
         }
         
-        function getCsvUrl(sheetId) {
-            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Raw%20Submissions`;
+        function getCsvUrl(sheetId, sheetName) {
+            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
         }
         
         async function loadData() {
@@ -114,29 +164,31 @@
                 return;
             }
             
-            fetchAndDisplay(sheetId);
+            await fetchData(sheetId);
         }
         
-        async function fetchAndDisplay(sheetId) {
+        async function fetchData(sheetId) {
             try {
                 clearError();
-                const csvUrl = getCsvUrl(sheetId);
-                const response = await fetch(csvUrl);
                 
-                if (!response.ok) {
-                    throw new Error('Sheet not found or not shared publicly');
+                // Fetch availability
+                const csvUrl1 = getCsvUrl(sheetId, 'Raw Submissions');
+                const response1 = await fetch(csvUrl1);
+                if (response1.ok) {
+                    const csv1 = await response1.text();
+                    availabilityData = parseCSV(csv1);
                 }
                 
-                const csv = await response.text();
-                const data = parseCSV(csv);
-                
-                if (!data || data.length === 0) {
-                    showError('No data found in Raw Submissions sheet');
-                    return;
+                // Fetch confirmed matches
+                const csvUrl2 = getCsvUrl(sheetId, 'Confirmed Matches');
+                const response2 = await fetch(csvUrl2);
+                if (response2.ok) {
+                    const csv2 = await response2.text();
+                    matchesData = parseCSV(csv2);
                 }
                 
-                availabilityData = data;
-                renderCalendar();
+                renderAvailabilityCalendar();
+                renderMatchesCalendar();
                 
             } catch (error) {
                 showError('Error: ' + error.message);
@@ -153,24 +205,27 @@
             for (let i = 1; i < lines.length; i++) {
                 const parts = lines[i].split(',');
                 const row = {};
-                
                 headers.forEach((header, idx) => {
                     row[header] = (parts[idx] || '').trim().replace(/"/g, '');
                 });
-                
-                if (row.Date && row['Time Slot'] && row['Team Name']) {
-                    data.push(row);
-                }
+                if (row.Date) data.push(row);
             }
-            
             return data;
         }
         
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
+        function renderAvailabilityCalendar() {
+            renderCalendar(currentDate1, availabilityData, 'calendarGrid1', 'monthTitle1', 'availability');
+        }
+        
+        function renderMatchesCalendar() {
+            renderCalendar(currentDate2, matchesData, 'calendarGrid2', 'monthTitle2', 'matches');
+        }
+        
+        function renderCalendar(date, data, gridId, titleId, type) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
             
-            document.getElementById('monthTitle').textContent = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            document.getElementById(titleId).textContent = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
             
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
@@ -179,55 +234,64 @@
             
             let html = '';
             
-            // Previous month's days
-            const prevMonthDays = new Date(year, month, 0).getDate();
             for (let i = startingDayOfWeek - 1; i >= 0; i--) {
                 html += `<div class="day-cell other-month"></div>`;
             }
             
-            // Current month's days
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayAvailability = availabilityData.filter(d => d.Date === dateStr);
+                const dayData = data.filter(d => d.Date === dateStr);
                 
-                html += `<div class="day-cell">
-                    <div class="day-date">${day}</div>`;
+                html += `<div class="day-cell"><div class="day-date">${day}</div>`;
                 
-                if (dayAvailability.length > 0) {
-                    dayAvailability.forEach(item => {
-                        const timeSlot = item['Time Slot'];
-                        const timeClass = timeSlot.toLowerCase().replace(/\s+/g, '').replace('flexible(anytime)', 'flexible');
-                        html += `<div class="team-item ${timeClass}">${item['Team Name']}<br><small>${timeSlot}</small></div>`;
+                if (dayData.length > 0) {
+                    dayData.forEach(item => {
+                        if (type === 'availability') {
+                            const timeSlot = item['Time Slot'];
+                            const timeClass = timeSlot.toLowerCase().replace(/\s+/g, '').replace('flexible(anytime)', 'flexible');
+                            html += `<div class="team-item ${timeClass}">${item['Team Name']}<br><small>${timeSlot}</small></div>`;
+                        } else {
+                            html += `<div class="match-item">${item['team1']} vs ${item['team2']}<br><small>${item['time']}</small></div>`;
+                        }
                     });
                 }
                 
                 html += `</div>`;
             }
             
-            // Next month's days
             const totalCells = startingDayOfWeek + daysInMonth;
             const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
             for (let i = 0; i < remainingCells; i++) {
                 html += `<div class="day-cell other-month"></div>`;
             }
             
-            document.getElementById('calendarGrid').innerHTML = html;
+            document.getElementById(gridId).innerHTML = html;
         }
         
-        function prevMonth() {
-            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
-            renderCalendar();
+        function prevMonth(tab) {
+            if (tab === 'availability') {
+                currentDate1 = new Date(currentDate1.getFullYear(), currentDate1.getMonth() - 1);
+                renderAvailabilityCalendar();
+            } else {
+                currentDate2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth() - 1);
+                renderMatchesCalendar();
+            }
         }
         
-        function nextMonth() {
-            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
-            renderCalendar();
+        function nextMonth(tab) {
+            if (tab === 'availability') {
+                currentDate1 = new Date(currentDate1.getFullYear(), currentDate1.getMonth() + 1);
+                renderAvailabilityCalendar();
+            } else {
+                currentDate2 = new Date(currentDate2.getFullYear(), currentDate2.getMonth() + 1);
+                renderMatchesCalendar();
+            }
         }
         
         function refreshData() {
             const url = document.getElementById('sheetUrl').value.trim();
             const sheetId = getSheetIdFromUrl(url);
-            if (sheetId) fetchAndDisplay(sheetId);
+            if (sheetId) fetchData(sheetId);
         }
         
         function showError(msg) {
